@@ -1,0 +1,40 @@
+version: '3.3'
+services:
+  api:
+    build:
+      context: .
+    depends_on:
+      - mysql
+    ports:
+      - '8888:8888'
+    volumes:
+      - ./api:/api
+      - /api/node_modules
+    environment:
+      - JWT_SECRET=QgULEEcV_025R_CGu5orzsk0aZ84S3JkpQTl1qYFohQ
+      - SERVER_PORT=8888
+      - LOG_LEVEL=debug
+      - URLS_PROTOCOL=http
+      - URLS_URL=mysql
+      - URLS_PORT=8888
+      - URLS_API_ROOT=/api/v1
+      - DB_NAME=back
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - EMAIL_FROM_ADDRESS=MyApp<no-reply@example.com>
+      - EMAIL_API_KEY=(yourmailgunapikey)
+      - EMAIL_DOMAIN=(yourmailgundomain)
+    command: > 
+      bash -c "npm install
+      && npm run sql
+      && npm run seed
+      && npm start"
+  mysql:
+    image: 'mysql:5.7'
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_USER: 'adm'
+      MYSQL_PASSWORD: 'root'
+      MYSQL_DATABASE: 'back'
